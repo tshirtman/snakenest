@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+    <head>
+        <title>{{ forum.name }}</title>
+    </head>
+    <body>
+        <a href="/">home</a>
+        {% if session['username'] %}
+        connected as {{ session['username'] }}
+        {% else %}
+        connected as anonymous
+        {% endif %}
+
+        <ul>
+        {% for f in forum.forums %}
+        <li>forum <a href="{{ f.name }}">{{ f.name }}</a></li>
+        {% endfor %}
+
+        {% for t in forum.threads %}
+        <li>thread <a href="thread/{{ t._id }}">{{ t.title }}</a></li>
+        {% endfor %}
+
+        {% if not forum.locked %}
+        <a href="new_thread">Create Thread</a>
+        <a href="new_forum">Create Forum</a>
+        {% endif %}
+
+        </ul>
+    </body>
+</html>
+

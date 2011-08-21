@@ -1,0 +1,13 @@
+
+sudo apt-get install mongodb
+
+virtualenv snakenest --no-dist-packages
+source snaketest/bin/activate
+
+pip install flask
+pip install mongokit
+
+setup your mongodb
+
+python main.py
+

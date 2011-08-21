@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+    <head>
+        <title>{% if forum %}{{ forum.name }}{% endif %} - {{ thread.title }}</title>
+    </head>
+    <body>
+        <a href="/">home</a>
+        {% if session['username'] %}
+        connected as {{ session['username'] }}
+        {% else %}
+        connected as anonymous
+        {% endif %}
+
+        {{ thread.title }}
+        <ul>
+        {% for comment in thread.comments %}
+        <div>
+            <div>{{ comment.author.name }}</div>
+            <div>{{ comment.creation_date }}</div>
+            <div>{{ comment.text }}</div>
+        </div>
+        {% endfor %}
+
+        {% if not thread.locked %}
+        <a href="{{ thread._id }}/respond">respond Thread</a>
+        <form method="POST" action="{{ thread._id }}/respond">
+        <textarea name="text"></textarea><br />
+        <input type="submit"/>
+        </form>
+        {% endif %}
+
+        </ul>
+    </body>
+</html>
+
