@@ -1,8 +1,10 @@
+# you need a mongodb server
+#sudo apt-get install mongodb
 
-sudo apt-get install mongodb
-
+# optional, use virtualenv
 virtualenv snakenest --no-dist-packages
-source snaketest/bin/activate
+source snakenest/bin/activate
+
 
 pip install flask
 pip install mongokit
