@@ -94,6 +94,7 @@ def new_root_forum():
         new_forum = c.forums.Forum()
         new_forum.name = request.form['name']
         forum.forums.append(new_forum)
+        root.save()
 
         return redirect(request.form['name'])
 
@@ -109,7 +110,8 @@ def new_forum(forum_path):
     elif request.method == 'POST':
         new_forum = c.forums.Forum()
         new_forum.name = request.form['name']
-        forum.forums.append(new_forum)
+        forum['forums'].append(new_forum)
+        root.save()
 
         return redirect('/' + forum_path + '/' + request.form['name'])
 
@@ -136,6 +138,7 @@ def new_root_thread():
         comment.creation_date = datetime.today()
         new_thread.comments.append(comment)
         forum.threads.append(new_thread)
+        root.save()
 
         return redirect('/thread/' + str(new_thread._id))
 
@@ -162,6 +165,7 @@ def new_thread(forum_path):
         comment.creation_date = datetime.today()
         new_thread.comments.append(comment)
         forum.threads.append(new_thread)
+        root.save()
 
         return redirect('/'+ forum_path + '/thread/' + str(new_thread._id))
 
@@ -169,7 +173,7 @@ def new_thread(forum_path):
 @app.route('/<path:forum_path>/thread/<string:id_thread>')
 def thread(forum_path=None, id_thread=None):
     forum = get_forum_by_path(forum_path)
-    t = [Thread(x) for x in forum.threads if str(x['_id']) == id_thread][0]
+    t = [x for x in forum['threads'] if str(x['_id']) == id_thread][0]
     return render_template('thread.html',
             forum=forum,
             thread=t)
@@ -186,12 +190,10 @@ def respond_arbitraty_thread(id_thread=None):
 
     if request.method == 'GET':
         # XXX
-        return render_template('thread.html',
-                forum=None,
-                thread=t)
+        return redirect('/thread/' + str(t['_id']))
 
     elif request.method == 'POST':
-        if not t.locked:
+        if not t['locked']:
             user = connection['my_forum'].users.User.find_one(
                     {'name': session['username']})
 
@@ -199,7 +201,8 @@ def respond_arbitraty_thread(id_thread=None):
             comment.author = user._id
             comment.text = request.form['text']
             comment.creation_date = datetime.today()
-            t.comments.append(comment)
+            t['comments'].append(comment)
+            root.save()
 
         return redirect('/thread/' + str(id_thread))
 
@@ -209,14 +212,13 @@ def respond_arbitraty_thread(id_thread=None):
 def respond(forum_path=None, id_thread=None):
     c = connection['my_forum']
     forum = get_forum_by_path(forum_path)
-    t = [c.threads.Thread(x) for x in forum.threads if str(x['_id']) == id_thread][0]
+    t = [x for x in forum['threads'] if str(x['_id']) == id_thread][0]
     if request.method == 'GET':
         # XXX
-        return render_template('thread.html',
-                forum=forum,
-                thread=t)
+        return redirect('/' + forum_path + '/thread/' + str(t['_id']))
+
     elif request.method == 'POST':
-        if not t.locked:
+        if not t['locked']:
             user = connection['my_forum'].users.User.find_one(
                     {'name': session['username']})
 
@@ -224,9 +226,10 @@ def respond(forum_path=None, id_thread=None):
             comment.author = user._id
             comment.text = request.form['text']
             comment.creation_date = datetime.today()
-            t.comments.append(comment)
+            t['comments'].append(comment)
+            root.save()
 
-        return redirect('/' + forum_path + '/thread/' + str(t._id))
+        return redirect('/' + forum_path + '/thread/' + str(t['_id']))
 
 
 @app.route('/user/<int:id_user>')

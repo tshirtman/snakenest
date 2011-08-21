@@ -29,15 +29,11 @@ def get_cookie(fcn):
     return decorated
 
 def search_thread(id_thread, forum):
-    for t in forum.threads:
-        try:
-            if str(t._id) == id_thread:
-                return t
-        except:
-            if str(t['_id']) == id_thread:
-                return t
+    for t in forum['threads']:
+        if str(t['_id']) == id_thread:
+            return t
 
-    for f in forum.forums:
+    for f in forum['forums']:
         r = search_thread(id_thread, f)
         if r:
             return r
@@ -50,7 +46,7 @@ def get_forum_by_path(forum_path=None):
     if forum_path:
         forums = forum_path.split('/')
         for i in forums:
-            forum = filter(lambda x: x.name == i, forum.forums)[0]
+            forum = filter(lambda x: x['name'] == i, forum['forums'])[0]
 
     return forum
 
