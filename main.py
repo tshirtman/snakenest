@@ -1,4 +1,4 @@
-#)!/usr/bin/env python
+#!/usr/bin/env python
 #http://flask.pocoo.org/docs/quickstart
 
 from flask import Flask
