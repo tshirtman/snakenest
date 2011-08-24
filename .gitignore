@@ -1,6 +1,6 @@
 *.pyc
 *.pyo
-*.swp
-*.swo
+.*.swp
+.*.swo
 *.vim
 data/*

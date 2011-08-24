@@ -70,16 +70,18 @@ def forum(forum_path):
         raise
         #abort(404)
 
+@get_cookie
+@app.route('/<path:forum_path>/delete')
+def delete_forum(forum_path):
+    parent_path = forum_path.split('/')[:-1]
+    parent = get_forum_by_path('/'.join(parent_path))
+    for i, x in enumerate(parent.forums):
+        if x['name'] == forum_path.split('/')[-1]:
+            parent['forums'].pop(i)
+            break
 
-@app.route('/thread/<string:id_thread>')
-def arbitrary_thread(id_thread):
-    t = search_thread(id_thread, root)
-    if t:
-        return render_template('thread.html',
-                thread=t,
-                forum=None)
-    else:
-        abort(404)
+    root.save()
+    return redirect(parent_path)
 
 
 @app.route('/new_forum', methods=['GET', 'POST'])
@@ -236,6 +238,10 @@ def respond(forum_path=None, id_thread=None):
 def user(id_user):
     pass
 
+
+@app.template_filter()
+def user_name(id_user):
+    return connection['my_forum'].users.User.find_one({'_id': id_user}).name
 
 if __name__ == '__main__':
     app.run(

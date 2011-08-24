@@ -20,7 +20,7 @@
         <li>thread <a href="thread/{{ t._id }}">{{ t.title }}</a></li>
         {% endfor %}
 
-        {% if not forum.locked %}
+        {% if not forum.locked and session['username'] %}
         <a href="new_thread">Create Thread</a>
         <a href="new_forum">Create Forum</a>
         {% endif %}

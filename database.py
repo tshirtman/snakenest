@@ -48,6 +48,7 @@ class Forum(Document):
     def __repr__(self):
         return '<Forum %r>' % (self.name)
 
+
 class Thread(Document):
     structure = {
             '_id' : ObjectId,
@@ -63,6 +64,7 @@ class Thread(Document):
 
     def __repr__(self):
         return '<Thread %r>' % (self.title)
+
 
 class Comment(Document):
     structure = {

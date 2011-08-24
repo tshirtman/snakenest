@@ -15,13 +15,13 @@
         <ul>
         {% for comment in thread.comments %}
         <div>
-            <div>{{ comment.author.name }}</div>
+            <div><a href="/user/{{ comment.author }}">{{ comment.author|user_name }}</a></div>
             <div>{{ comment.creation_date }}</div>
             <div>{{ comment.text }}</div>
         </div>
         {% endfor %}
 
-        {% if not thread.locked %}
+        {% if not thread.locked and session['username'] %}
         <a href="{{ thread._id }}/respond">respond Thread</a>
         <form method="POST" action="{{ thread._id }}/respond">
         <textarea name="text"></textarea><br />
